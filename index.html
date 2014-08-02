@@ -1,0 +1,393 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Bamboo API by fosco-maestro</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/fosco-maestro/bamboo-api">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/fosco-maestro/bamboo-api/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/fosco-maestro/bamboo-api/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Bamboo API</h1>
+          <p>Node.js module wrapping the Atlassian Bamboo REST API</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/fosco-maestro">fosco-maestro</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <p><a href="https://travis-ci.org/sebarmeli/bamboo-api"><img src="https://travis-ci.org/sebarmeli/bamboo-api.png" alt="Build Status"></a></p>
+
+<p>Node.js module wrapping the <a href="https://developer.atlassian.com/display/BAMBOODEV/Bamboo+REST+APIs">Atlassian Bamboo REST API</a>.
+This module gets some useful information from your <a href="http://www.atlassian.com/software/bamboo/overview">Atlassian Bamboo</a> CI,
+such as latest successful build number for a plan or JIRA issues associated to a specific build.</p>
+
+<p>It can be used as command-line interface or can be included in your Node app.</p>
+
+<h1>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>After getting Node.js and npm:</p>
+
+<pre><code>$ npm install -g bamboo-api
+</code></pre>
+
+<h1>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<h2>
+<a name="in-node-app" class="anchor" href="#in-node-app"><span class="octicon octicon-link"></span></a>In Node app</h2>
+
+<p>You can require the module from your Node app.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">Bamboo</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'bamboo-api'</span><span class="p">);</span>
+</pre></div>
+
+<p>After that, you can instantiate the Bamboo function:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">bamboo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bamboo</span><span class="p">(</span><span class="s2">"http://www.host:8085"</span><span class="p">);</span>
+</pre></div>
+
+<p>and then you can use the available methods, e.g.:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">bamboo</span><span class="p">.</span><span class="nx">getLatestBuildStatus</span><span class="p">(</span><span class="s2">"PROJECT_KEY-PLAN_KEY"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something here</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Also you can use basic http <strong>authentication</strong> that specified in <a href="http://www.ietf.org/rfc/rfc1738.txt">RFC 1738</a> by passing
+<code>username</code> and <code>password</code> to <code>Bamboo</code> constructor as second and third parameter.</p>
+
+<p>For example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">bamboo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bamboo</span><span class="p">(</span><span class="s2">"http://www.host:8085"</span><span class="p">,</span> <span class="s2">"username"</span><span class="p">,</span> <span class="s2">"password"</span><span class="p">);</span>
+
+<span class="nx">bamboo</span><span class="p">.</span><span class="nx">getLatestBuildStatus</span><span class="p">(</span><span class="s2">"PROJECT_KEY-PLAN_KEY"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something here</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="available-methods" class="anchor" href="#available-methods"><span class="octicon octicon-link"></span></a>Available methods</h3>
+
+<h4>
+<a name="bamboogetlatestsuccessfulbuildnumberplankey-params-callback" class="anchor" href="#bamboogetlatestsuccessfulbuildnumberplankey-params-callback"><span class="octicon octicon-link"></span></a>bamboo.getLatestSuccessfulBuildNumber(planKey, params, callback)</h4>
+
+<p>Get the latest successful build number.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">bamboo</span><span class="p">.</span><span class="nx">getLatestSuccessfulBuildNumber</span><span class="p">(</span><span class="s2">"PROJECT_KEY-PLAN_KEY"</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Latest successful build number:"</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="bamboogetlatestbuildstatusplankey-callback" class="anchor" href="#bamboogetlatestbuildstatusplankey-callback"><span class="octicon octicon-link"></span></a>bamboo.getLatestBuildStatus(planKey, callback)</h4>
+
+<p>Get latest build status: state and number.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">bamboo</span><span class="p">.</span><span class="nx">getLatestSuccessfulBuildNumber</span><span class="p">(</span><span class="s2">"PROJECT_KEY-PLAN_KEY"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Latest build state:"</span><span class="p">,</span> <span class="nx">state</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Latest build number:"</span><span class="p">,</span> <span class="nx">number</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="bamboogetbuildstatusbuilddetails-callback" class="anchor" href="#bamboogetbuildstatusbuilddetails-callback"><span class="octicon octicon-link"></span></a>bamboo.getBuildStatus(buildDetails, callback)</h4>
+
+<p>Get status of the build.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">bamboo</span><span class="p">.</span><span class="nx">getBuildStatus</span><span class="p">(</span><span class="s2">"PROJECT_KEY-PLAN_KEY/BUILD_NUMBER"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Status of the build:"</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="bamboogetchangesfrombuildbuilddetails-callback" class="anchor" href="#bamboogetchangesfrombuildbuilddetails-callback"><span class="octicon octicon-link"></span></a>bamboo.getChangesFromBuild(buildDetails, callback)</h4>
+
+<p>Get changes associated to a specific build. It also considers a dependent plan recursively.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">bamboo</span><span class="p">.</span><span class="nx">getChangesFromBuild</span><span class="p">(</span><span class="s2">"PROJECT_KEY-PLAN_KEY/BUILD_NUMBER"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"List of changes:"</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="bamboogetjiraissuesfrombuildbuilddetails-callback" class="anchor" href="#bamboogetjiraissuesfrombuildbuilddetails-callback"><span class="octicon octicon-link"></span></a>bamboo.getJiraIssuesFromBuild(buildDetails, callback)</h4>
+
+<p>Get jira issues associated to a specific build. It also considers a dependent plan.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">bamboo</span><span class="p">.</span><span class="nx">getJiraIssuesFromBuild</span><span class="p">(</span><span class="s2">"PROJECT_KEY-PLAN_KEY/BUILD_NUMBER"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"List of JIRA tasks:"</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="bamboogetartifactcontentbuilddetails-artifactname-callback" class="anchor" href="#bamboogetartifactcontentbuilddetails-artifactname-callback"><span class="octicon octicon-link"></span></a>bamboo.getArtifactContent(buildDetails, artifactName, callback)</h4>
+
+<p>Get content of an artifact associated to a build.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">bamboo</span><span class="p">.</span><span class="nx">getArtifactContent</span><span class="p">(</span><span class="s2">"PROJECT_KEY-PLAN_KEY/BUILD_NUMBER"</span><span class="p">,</span> <span class="s2">"artifact"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Content of an artifact:"</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="bamboogetallplansparams-callback-currentplans" class="anchor" href="#bamboogetallplansparams-callback-currentplans"><span class="octicon octicon-link"></span></a>bamboo.getAllPlans(params, callback, currentPlans)</h4>
+
+<p>Get list of plans, key and names available.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">bamboo</span><span class="p">.</span><span class="nx">getArtifactContent</span><span class="p">(</span><span class="s2">"?start-index=25"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Plans:"</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="command-line" class="anchor" href="#command-line"><span class="octicon octicon-link"></span></a>Command line</h2>
+
+<p>The module can be used from command-line and there are few commands available.</p>
+
+<p>Before use you need to define the Bamboo URL in BAMBOO_URL environment variable (default: <code>http://localhost:8085</code>):</p>
+
+<ul>
+<li>*nix: <code>export BAMBOO_URL=http://host:port</code>
+</li>
+<li>Windows: <code>set BAMBOO_URL=http://host:port</code>
+</li>
+</ul><p>After variable is defined, you can use bamboo-api command line, otherwise on execution you should get following error:</p>
+
+<pre><code>$ bamboo-api build_no "PROJECT_KEY-PLAN_KEY"
+
+&gt; ERROR: Before use of Bamboo API command line, specified global variable BAMBOO_URL in your environment!
+
+    For *nix users:
+
+      export BAMBOO_URL="BAMBOO_URL_HERE"
+
+    For Windows users:
+
+      set BAMBOO_URL="BAMBOO_URL_HERE"
+
+  For more information use --help or read README file.
+&gt; Error: connect ECONNREFUSED
+</code></pre>
+
+<h3>
+<a name="available-commands" class="anchor" href="#available-commands"><span class="octicon octicon-link"></span></a>Available commands</h3>
+
+<p>For command line help use option <code>--help</code>:</p>
+
+<pre><code>$ bamboo-api --help
+
+  Usage: bamboo-api [command] &lt;params...&gt;
+
+  Commands:
+
+    build_no &lt;PROJECT_KEY-PLAN_KEY&gt;
+    get the latest successful build number
+
+    status &lt;PROJECT_KEY-PLAN_KEY&gt;
+    get status and build number of the latest build
+
+    build_status &lt;PROJECT_KEY-PLAN_KEY/BUILD_NUMBER&gt;
+    get the status of the build
+
+    changes &lt;PROJECT_KEY-PLAN_KEY/BUILD_NUMBER&gt;
+    gets all the changes associated to a specific build - considering dependent plan too
+
+    jira_issues &lt;PROJECT_KEY-PLAN_KEY/BUILD_NUMBER&gt;
+    gets all the JIRA issues associated to a specific build - considering dependent plan too
+
+    artifact &lt;PROJECT_KEY-PLAN_KEY/BUILD_NUMBER&gt; &lt;ARTIFACT_NAME&gt;
+    gets the content of an artifact associated to a build
+
+    plans
+    gets the list of all plans available
+
+  Options:
+
+    -h, --help     output usage information
+    -V, --version  output the version number
+
+  Environment variables:
+
+    BAMBOO_URL          Bamboo's UR (default: 'http://localhost:8085').
+                        Note: you can use base authentication using url,
+                        Simply pass the 'user:password' before the host
+                        with an '@' sign.
+
+                        For example: http://user:password@example.com
+
+  Examples:
+
+    $ bamboo-api build_status "PROJECT_KEY-PLAN_KEY/BUILD_NUMBER"
+    &gt; InProgress
+
+$ bamboo-api build_no --help
+
+  Usage: build_no &lt;PROJECT_KEY-PLAN_KEY&gt;
+
+  Options:
+
+    -h, --help  output usage information
+
+</code></pre>
+
+<h4>
+<a name="bamboo-api-build_no" class="anchor" href="#bamboo-api-build_no"><span class="octicon octicon-link"></span></a>bamboo-api build_no</h4>
+
+<p>Get the build number of the latest successful build number:</p>
+
+<pre><code>$ bamboo-api build_no &lt;PROJECT_KEY-PLAN_KEY&gt;
+</code></pre>
+
+<p>Will output <code>result</code> or <code>error</code>.</p>
+
+<h4>
+<a name="bamboo-api-status" class="anchor" href="#bamboo-api-status"><span class="octicon octicon-link"></span></a>bamboo-api status</h4>
+
+<p>Get status and build number of the latest build:</p>
+
+<pre><code>$ bamboo-api status &lt;PROJECT_KEY-PLAN_KEY&gt;
+</code></pre>
+
+<p>Will output <code>state</code> and <code>number</code> otherwise <code>error</code>.</p>
+
+<h4>
+<a name="bamboo-api-build_status" class="anchor" href="#bamboo-api-build_status"><span class="octicon octicon-link"></span></a>bamboo-api build_status</h4>
+
+<p>Get the status of the build:</p>
+
+<pre><code>$ bamboo-api build_no &lt;PROJECT_KEY-PLAN_KEY/BUILD_NUMBER&gt;
+</code></pre>
+
+<p>Will output <code>result</code> or <code>error</code>.</p>
+
+<h4>
+<a name="bamboo-api-changes" class="anchor" href="#bamboo-api-changes"><span class="octicon octicon-link"></span></a>bamboo-api changes</h4>
+
+<p>Get all the changes associated to a specific build - considering dependent plan:</p>
+
+<pre><code>$ bamboo-api changes &lt;PROJECT_KEY-PLAN_KEY/BUILD_NUMBER&gt;
+</code></pre>
+
+<p>Will output <code>result</code> or <code>error</code>.</p>
+
+<h4>
+<a name="bamboo-api-jira_issue" class="anchor" href="#bamboo-api-jira_issue"><span class="octicon octicon-link"></span></a>bamboo-api jira_issue</h4>
+
+<p>Get the list of JIRA issues associated to a specific build - considering dependent plan:</p>
+
+<pre><code>$ bamboo-api jira_issue &lt;PROJECT_KEY-PLAN_KEY/BUILD_NUMBER&gt;
+</code></pre>
+
+<p>If you work with build pipelines, you know that builds are triggered by other builds. So you might need to find out the
+JIRA issues associated to the commits done on the build triggering the considered 'plan'.</p>
+
+<p>Note: For the JIRA integration to work, you need to define the JIRA task in the message of your Git commit.</p>
+
+<p>Will output <code>result</code> or <code>error</code>.</p>
+
+<h4>
+<a name="bamboo-api-artifact" class="anchor" href="#bamboo-api-artifact"><span class="octicon octicon-link"></span></a>bamboo-api artifact</h4>
+
+<p>Get the content of an artifact associated to a specific build:</p>
+
+<pre><code>$ bamboo-api artifact &lt;PROJECT_KEY-PLAN_KEY/BUILD_NUMBER&gt; &lt;ARTIFACT_NAME&gt;
+</code></pre>
+
+<p>Will output <code>result</code> or <code>error</code>.</p>
+
+<h4>
+<a name="bamboo-api-plans" class="anchor" href="#bamboo-api-plans"><span class="octicon octicon-link"></span></a>bamboo-api plans</h4>
+
+<p>Get the list of all the plans available:</p>
+
+<pre><code>$ bamboo-api plans
+</code></pre>
+
+<p>Will output <code>result</code> or <code>error</code>.</p>
+
+<h1>
+<a name="development" class="anchor" href="#development"><span class="octicon octicon-link"></span></a>Development</h1>
+
+<p>This module contains only a limited set of information available with the Bamboo API. Feel free to extend it. Test cases
+are located in the 'test' folder and you run them either through:</p>
+
+<pre><code>$ npm test
+</code></pre>
+
+<p>or if you have globally installed <code>mocha</code>, just use it:</p>
+
+<pre><code>$ mocha
+</code></pre>
+
+<h1>
+<a name="copyright" class="anchor" href="#copyright"><span class="octicon octicon-link"></span></a>Copyright</h1>
+
+<p>Copyright (C) 2012 Sebastiano Armeli-Battana and other <a href="https://github.com/sebarmeli/bamboo-api/graphs/contributors">contributors</a>.</p>
+
+<p>Distributed under the MIT License.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
